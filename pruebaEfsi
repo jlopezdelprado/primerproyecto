@@ -1,0 +1,202 @@
+#multiapp -- Julian Lopez del Prado y Facundo Pereyra Lopez
+#libreria
+
+#importamos librerias uttilizadas
+import random
+import math
+from plyer import notification
+import pyttsx3
+import yt_dlp
+
+#voz se inicializa
+voz = pyttsx3.init()
+voz.setProperty('rate', 120)
+def hablar(texto):
+    voz.say(texto)
+    voz.runAndWait()
+
+
+#incio
+usuarios = []
+
+def iniciar_sesion():
+    hablar("Ingresa tu Nombre de usuario:")
+    print("🔑 Inicio de Sesion")
+    nombre = input("Ingresa tu nombre de usuario: ")
+    if nombre in usuarios:
+        print("Bienvenido/a,", nombre)
+        hablar("Bienvenido " + nombre)
+        return True
+    else:
+        print("usuario no encontrado ¿queres registrarte?") #registro agregado!
+        registro = input("(s/n): ").lower()
+        if registro == "s":
+            usuarios.append(nombre)
+            print("usuario registrado!")
+            return True
+        return False
+
+#calculadiora
+def calculadora():
+    hablar("Calculadora")
+    print("🧮 Calculadora!")
+    print("Operaciones disponibles:")
+    print("1. Sumar")
+    print("2. Restar")
+    print("3. Multiplicar")
+    print("4. Dividir")
+    print("5. Potencia")
+
+    opcion = input("Elegi lo que quieras hacer --> (1-5): ")
+
+    if opcion in ["1", "2", "3", "4", "5"]:
+        num1 = float(input("Primer numero: "))
+        num2 = float(input("Segundo numero: "))
+
+        if opcion == "1":
+            print("Resultado:", num1 + num2)
+        elif opcion == "2":
+            print("Resultado:", num1 - num2)
+        elif opcion == "3":
+            print("Resultado:", num1 * num2)
+        elif opcion == "4":
+            if num2 != 0:
+                print("Resultado:", num1 / num2)
+            else:
+                print("No se puede dividir por cero")
+        elif opcion == "5":
+            print("Resultado:", num1 ** num2)
+    else:
+        print("Opcion invalida")
+
+#ppt
+def piedra_papel_tijera():
+    print("✊ Piedra, 📄 Papel o ✂️ Tijera!")
+    hablar("Piedra, Papel o Tijera")
+    opciones = ("piedra", "papel", "tijera")  #tupla
+    jugador = input("Elegi piedra, papel o tijera: ").lower()
+    computadora = random.choice(opciones)
+    print("La computadora eligio:", computadora)
+
+    if jugador == computadora:
+        print("Empate")
+        hablar("Empate")
+    #uso de or \ para saber si algo es verdadero
+    elif (jugador == "piedra" and computadora == "tijera") or \
+        (jugador == "papel" and computadora == "piedra") or \
+        (jugador == "tijera" and computadora == "papel"):
+        print("Ganaste 😊")
+        hablar("Ganaste")
+    else:
+        print("Perdiste 😢")
+        hablar("Perdiste")
+
+#calendario
+eventos = []
+def guardar_evento():
+    hablar("Calendario")
+    print("📅 Calendario!")
+    hablar("1. Guadar nuevo evento")
+    print("1. Guardar nuevo evento")
+    hablar("2. Ver eventos guardados")
+    print("2. Ver eventos guardados")
+    eleccion = input("Elegi una opcion: ")
+
+    if eleccion == "1":
+        hablar("¿Que evento queres guardar?")
+        nombre = input("¿Que evento queres guardar?: ")
+        fecha = input("¿Para que fecha (YYYY-MM-DD)?: ")
+        eventos.append(nombre + " - " + fecha)  #lista
+        print("Evento guardado 👍")
+    elif eleccion == "2":
+        if len(eventos) == 0:
+            print("No hay eventos guardados todavia")
+            hablar("No hay eventos guardados todavia")
+        else:
+            print("📆 Lista de eventos:")
+            hablar("Lista de Eventos")
+            for e in eventos:
+                print("-", e)
+    else:
+        print("Opcion no valida")
+
+#cancuiones
+def cancion_estado():
+    hablar("Cancion segun tu estado de animo")
+    print("🎵 Cancion segun tu estado de animo!")
+    estado = input("¿Como te sentis? (feliz 😊/triste 😪/enojado 😡): ").lower() #correccion de lower
+
+    if estado == "feliz":
+        url = "https://www.youtube.com/watch?v=eVli-tstM5E" 
+        print("Escucha: ", url)
+    elif estado == "triste":
+        url = "https://www.youtube.com/watch?v=f1V0cQFyC7E"
+        print("Escucha: ", url)
+    elif estado == "enojado":
+        url = "https://www.youtube.com/watch?v=WqlqPeghQCo"
+        print("Escucha: ", url )
+    else:
+        print("Estado no disponile!")
+        hablar("Estado no disponile")
+
+#notificacion "juego"
+def notificacion_juego():
+    hablar("Juego con Notificaciones")
+    print("🎈 Juego con Notificaciones")
+    mensaje = "Hola, esta es la opcion mas aburrida de la multiapp 😴"
+    notification.notify(title="Gracias por probar mi multiApp", message=mensaje, timeout=5)
+    print("Notificacion enviada!")
+
+#programa principal
+def menu():
+    salir = False
+    while not salir:
+        hablar("Que tenes ganas de probar?")
+        print("¿Que tenes ganas de probar?")
+        print("1. Calculadora")
+        print("2. Piedra, Papel o Tijera")
+        print("3. Guardar o ver evento")
+        print("4. Elegir cancion segun tu estado")
+        print("5. Notificación divertida")
+        print("0. Salir")
+        op = input("Elige una opción: ")
+
+        if op == "1":
+            calculadora()
+        elif op == "2":
+            piedra_papel_tijera()
+        elif op == "3":
+            guardar_evento()
+        elif op == "4":
+            cancion_estado()
+        elif op == "5":
+            notificacion_juego()
+        elif op == "0":
+            print("Hasta pronto!")
+            hablar("Hasta pronto")
+            salir = True
+        else:
+            print("Opcion invalida!")
+
+        if not salir:
+            volver = input("¿Deseas volver al menú principal? (s/n): ").lower()
+            if volver != "s":
+                print("Gracias por usar la app! 👋")
+                salir = True
+
+#inicio del programa
+hablar("Bienvenido a la MultiApp")
+print("🦒 Bienvenido a la Multipp 🙉")
+print("---------------------------------")
+
+logueado = False
+
+if not logueado:
+    hablar("Iniciar sesion")
+    print("1. Iniciar sesion")
+    opcion = input("Escribi 1 para inicar la MultiApp :")
+    if opcion == "1":
+        logueado = iniciar_sesion()
+    else:
+        print("Opcion invalida!")
+menu()
